@@ -1,0 +1,37 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Kirana Store Onboarding with ONDC Protocol implementation - Backend",
+  "main": "src/server/onboarding.server.ts, src/server/exchange.server.ts",
+  "scripts": {
+    "start": "concurrently \"node src/servers/onboarding.server.ts\" \"node src/servers/exchange.server.ts\"",
+    "build": "tsc",
+    "dev": "concurrently \"nodemon src/servers/onboarding.server.ts\" \"nodemon src/servers/exchange.server.ts\""
+  },
+  "author": "Tamojit Das",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0",
+    "ioredis": "^5.4.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.3",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/helmet": "^4.0.0",
+    "@types/morgan": "^1.9.9",
+    "@types/node": "^22.10.5",
+    "concurrently": "^9.1.2",
+    "nodemon": "^3.1.9",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.7.3"
+  }
+}
