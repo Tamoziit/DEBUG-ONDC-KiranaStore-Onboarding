@@ -7,6 +7,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 
 import connectToOnboardingDB from "../db/onboardingDB";
+import authRoutes from "../routes/auth.routes";
 
 const PORT1 = process.env.PORT1 || 8000;
 const app = express();
@@ -23,6 +24,8 @@ app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.get("/api/v1", (req: Request, res: Response) => {
     res.send("<h1>Server up & running</h1>");
 });
+
+app.use("/api/v1/auth", authRoutes);
 
 app.listen(PORT1, () => {
     console.log(`Onboarding Server running on Port: ${PORT1}`);
