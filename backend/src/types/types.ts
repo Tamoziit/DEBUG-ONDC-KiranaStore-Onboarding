@@ -12,6 +12,12 @@ export interface LoginRequestBody {
     password: string;
 }
 
-export interface LogoutParams {
-    
+export interface WarehouseRequestBody {
+    code: string;
+    contactNo: string,
+    address: string
+}
+
+export interface AdminToken {
+    password: string
 }

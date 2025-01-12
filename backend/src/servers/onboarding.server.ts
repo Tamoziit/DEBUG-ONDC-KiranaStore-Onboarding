@@ -7,6 +7,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 
 import connectToOnboardingDB from "../db/onboardingDB";
+import adminRoutes from "../routes/admin.routes";
 import authRoutes from "../routes/auth.routes";
 
 const PORT1 = process.env.PORT1 || 8000;
@@ -25,6 +26,7 @@ app.get("/api/v1", (req: Request, res: Response) => {
     res.send("<h1>Server up & running</h1>");
 });
 
+app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/auth", authRoutes);
 
 app.listen(PORT1, () => {

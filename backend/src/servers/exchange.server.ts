@@ -7,6 +7,8 @@ import helmet from "helmet";
 import morgan from "morgan";
 
 import connectToExchangesDB from "../db/exchangesDB";
+import adminRoutes from "../routes/admin.routes";
+import warehouseRoutes from "../routes/warehouse.routes";
 
 const PORT2 = process.env.PORT2 || 8001;
 const app = express();
@@ -23,6 +25,9 @@ app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.get("/api/v1", (req: Request, res: Response) => {
     res.send("<h1>Server up & running</h1>");
 });
+
+app.use("/api/v1/admin", adminRoutes);
+app.use("/api/v1/warehouse", warehouseRoutes);
 
 app.listen(PORT2, () => {
     console.log(`Exchange Server running on Port: ${PORT2}`);
