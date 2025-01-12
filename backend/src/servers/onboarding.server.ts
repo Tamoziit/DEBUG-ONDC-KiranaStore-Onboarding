@@ -9,6 +9,7 @@ import morgan from "morgan";
 import connectToOnboardingDB from "../db/onboardingDB";
 import adminRoutes from "../routes/admin.routes";
 import authRoutes from "../routes/auth.routes";
+import storeRoutes from "../routes/store.routes";
 
 const PORT1 = process.env.PORT1 || 8000;
 const app = express();
@@ -28,6 +29,7 @@ app.get("/api/v1", (req: Request, res: Response) => {
 
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/store", storeRoutes);
 
 app.listen(PORT1, () => {
     console.log(`Onboarding Server running on Port: ${PORT1}`);

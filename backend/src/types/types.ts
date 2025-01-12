@@ -1,3 +1,36 @@
+import { Types } from "mongoose";
+import { Request } from "express";
+
+export interface AdminToken {
+    password: string
+}
+
+declare module "express" {
+    export interface Request {
+        user?: {
+            _id: Types.ObjectId,
+            name: string,
+            mobileNo: string,
+            age: number,
+            gender: string,
+            aadharNo: string,
+            aadharNoPreHash: string
+            stores: Types.ObjectId[];
+        }
+    }
+}
+
+export interface User {
+    _id: Types.ObjectId;
+    name: string;
+    mobileNo: string;
+    age: number;
+    gender: string;
+    aadharNo: string;
+    aadharNoPreHash: string;
+    stores: Types.ObjectId[];
+}
+
 export interface SignupRequestBody {
     name: string;
     mobileNo: string;
@@ -18,6 +51,18 @@ export interface WarehouseRequestBody {
     address: string
 }
 
-export interface AdminToken {
-    password: string
+export interface StoreRequestBody {
+    name: string,
+    gstNo: string,
+    address: string,
+    contactNo: string,
+    warehouseId: Types.ObjectId,
+    inventory: [
+        {
+            item: string,
+            quantity: number,
+            costPerItem: number,
+            mrp: number
+        }
+    ]
 }
