@@ -81,3 +81,27 @@ export interface ProcessOrderBody {
     itemId: Types.ObjectId;
     quantity: number
 }
+
+export interface StoreBody {
+    _id: Types.ObjectId;
+    name: string;
+    owner: Types.ObjectId;
+    gstNo: string;
+    address: string;
+    contactNo: string;
+    warehouseId: Types.ObjectId;
+    warehouseCode: string;
+    inventory: InventoryItem[];
+    incomePerMonth: number[];
+    incomePerYear: number[];
+    createdAt: Date;
+    updatedAt: Date;
+    __v: number;
+}
+
+export interface InventoryItem {
+    _id: Types.ObjectId;
+    item: string;
+    mrp: number;
+    quantity: number;
+}

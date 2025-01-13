@@ -82,3 +82,48 @@ export const registerStore = async (req: CustomRequest, res: Response) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 }
+
+export const getMyStores = async (req: Request, res: Response) => {
+    try {
+        const storeIds = req.user?.stores;
+        if (!storeIds || storeIds.length === 0) {
+            res.status(400).json({ error: "No stores registered" });
+            return;
+        }
+
+        const storePromises = storeIds.map((storeId) => Store.findById(storeId));
+        const stores = await Promise.all(storePromises);
+
+        const filteredStores = stores.filter((store) => store !== null);
+
+        if (filteredStores.length === 0) {
+            res.status(400).json({ error: "No stores found" });
+            return;
+        }
+
+        res.status(200).json(filteredStores);
+    } catch (error) {
+        console.error("Error in getMyStores controller", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+export const getStoreById = async (req: Request, res: Response) => {
+    try {
+        const id = req.params.id;
+        if (!id) {
+            res.status(400).json({ error: "No id provided" });
+            return;
+        }
+
+        const store = await Store.findById(id);
+        if (store) {
+            res.status(200).json(store);
+        } else {
+            res.status(400).json({ error: "No such store found" });
+        }
+    } catch (error) {
+        console.error("Error in getStoreById controller", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+}

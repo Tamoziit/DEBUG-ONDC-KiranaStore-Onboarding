@@ -153,3 +153,36 @@ export const processOrder = async (req: Request, res: Response) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
+
+export const getWarehouses = async (req: Request, res: Response) => {
+    try {
+        const warehouses = await Warehouse.find({});
+        if (warehouses.length === 0) {
+            res.status(400).json({ error: "No warehouses found" });
+        }
+        res.status(200).json(warehouses);
+    } catch (error) {
+        console.error("Error in getWarehouses controller", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+}
+
+export const getWarehouseById = async (req: Request, res: Response) => {
+    try {
+        const id = req.params.id;
+        if (!id) {
+            res.status(400).json({ error: "No id provided" });
+            return;
+        }
+
+        const store = await Warehouse.findById(id);
+        if (store) {
+            res.status(200).json(store);
+        } else {
+            res.status(400).json({ error: "No such store found" });
+        }
+    } catch (error) {
+        console.error("Error in getWarehouseById controller", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+}
