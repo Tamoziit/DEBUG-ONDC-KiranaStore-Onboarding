@@ -16,6 +16,8 @@ declare module "express" {
             aadharNo: string,
             aadharNoPreHash: string
             stores: Types.ObjectId[];
+            createdAt: Date;
+            updatedAt: Date;
         }
     }
 }
@@ -29,6 +31,8 @@ export interface User {
     aadharNo: string;
     aadharNoPreHash: string;
     stores: Types.ObjectId[];
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export interface SignupRequestBody {
@@ -65,4 +69,15 @@ export interface StoreRequestBody {
             mrp: number
         }
     ]
+}
+
+export interface SearchInput {
+    item: string;
+    warehouseId: Types.ObjectId;
+}
+
+export interface ProcessOrderBody {
+    storeId: Types.ObjectId;
+    itemId: Types.ObjectId;
+    quantity: number
 }

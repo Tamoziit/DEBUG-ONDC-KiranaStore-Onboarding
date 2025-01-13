@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { StoreRequestBody, User } from "../types/types";
 import Warehouse from "../models/warehouse.model";
 import Store from "../models/store.model";
+import UserModel from "../models/user.model";
 
 interface CustomRequest extends Request {
     user?: User;
@@ -67,6 +68,10 @@ export const registerStore = async (req: CustomRequest, res: Response) => {
             });
             warehouse.inventoryCost += totalInventoryCost;
             await warehouse.save();
+
+            const user = await UserModel.findById(owner);
+            user?.stores.push(newStore._id);
+            await user?.save();
 
             res.status(201).json(newStore);
         } else {
