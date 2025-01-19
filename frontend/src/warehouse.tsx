@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import "./warehouse.css";
 
+interface Warehouse {
+  code: string;
+  contactNo: string;
+  address: string;
+  storesCount: number; // Assuming the stores count is provided
+}
 
 const WarehouseManagement: React.FC = () => {
   const [warehouseCode, setWarehouseCode] = useState<string>("");
   const [warehouseContact, setWarehouseContact] = useState<string>("");
   const [warehouseAddress, setWarehouseAddress] = useState<string>("");
-  const [warehouseList, setWarehouseList] = useState<object[]>([]);
+  const [warehouseList, setWarehouseList] = useState<Warehouse[]>([]);
 
   const createWarehouse = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -33,11 +39,11 @@ const WarehouseManagement: React.FC = () => {
 
   const fetchWarehouses = async () => {
     try {
-      const response = await fetch("/api/v1/get-warehouses", {  // Changed the endpoint to match backend
+      const response = await fetch("/api/v1/warehouse", {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
-  
+
       const warehouses = await response.json();
       setWarehouseList(warehouses);
     } catch (error) {
@@ -45,26 +51,26 @@ const WarehouseManagement: React.FC = () => {
       alert("An error occurred. Please try again.");
     }
   };
-  
 
   return (
     <div className="container">
       <h1>Warehouse Management</h1>
-
+      
       <h2>All Warehouses</h2>
       <button onClick={fetchWarehouses}>Fetch Warehouses</button>
 
-      <div className="warehouse-cards-container">
+      <div className="warehouse-grid">
         {warehouseList.length > 0 ? (
-          warehouseList.map((warehouse: any) => (
-            <div className="warehouse-card" key={warehouse.id}>
-              <h3>Warehouse ID: {warehouse.id}</h3>
-              <p>Contact No: {warehouse.contactNo}</p>
-              <p>Address: {warehouse.address}</p>
+          warehouseList.map((warehouse, index) => (
+            <div key={index} className="warehouse-card">
+              <h3>{warehouse.code}</h3>
+              <p><strong>Contact No:</strong> {warehouse.contactNo}</p>
+              <p><strong>Address:</strong> {warehouse.address}</p>
+              <p><strong>Stores Registered:</strong> {warehouse.storesCount}</p>
             </div>
           ))
         ) : (
-          <p>No warehouses available.</p>
+          <p>No warehouses found.</p>
         )}
       </div>
     </div>
