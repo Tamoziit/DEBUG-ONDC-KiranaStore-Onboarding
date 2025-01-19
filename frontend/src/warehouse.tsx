@@ -1,10 +1,18 @@
 import React, { useState } from "react";
 import "./warehouse.css";
+
+interface Warehouse {
+  code: string;
+  contactNo: string;
+  address: string;
+  storesCount: number; // Assuming the stores count is provided
+}
+
 const WarehouseManagement: React.FC = () => {
   const [warehouseCode, setWarehouseCode] = useState<string>("");
   const [warehouseContact, setWarehouseContact] = useState<string>("");
   const [warehouseAddress, setWarehouseAddress] = useState<string>("");
-  const [warehouseList, setWarehouseList] = useState<object[]>([]);
+  const [warehouseList, setWarehouseList] = useState<Warehouse[]>([]);
 
   const createWarehouse = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -47,51 +55,24 @@ const WarehouseManagement: React.FC = () => {
   return (
     <div className="container">
       <h1>Warehouse Management</h1>
-
-      <h2>Create Warehouse</h2>
-      <form onSubmit={createWarehouse}>
-        <div className="form-group">
-          <label htmlFor="warehouseCode">Code</label>
-          <input
-            id="warehouseCode"
-            type="text"
-            placeholder="Code"
-            value={warehouseCode}
-            onChange={(e) => setWarehouseCode(e.target.value)}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="warehouseContact">Contact No</label>
-          <input
-            id="warehouseContact"
-            type="text"
-            placeholder="Contact No"
-            value={warehouseContact}
-            onChange={(e) => setWarehouseContact(e.target.value)}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="warehouseAddress">Address</label>
-          <input
-            id="warehouseAddress"
-            type="text"
-            placeholder="Address"
-            value={warehouseAddress}
-            onChange={(e) => setWarehouseAddress(e.target.value)}
-            required
-          />
-        </div>
-
-        <button type="submit">Create Warehouse</button>
-      </form>
-
+      
       <h2>All Warehouses</h2>
       <button onClick={fetchWarehouses}>Fetch Warehouses</button>
-      <pre id="warehouseList">{warehouseList.length>0?JSON.stringify(warehouseList, null, 2):""}</pre>
+
+      <div className="warehouse-grid">
+        {warehouseList.length > 0 ? (
+          warehouseList.map((warehouse, index) => (
+            <div key={index} className="warehouse-card">
+              <h3>{warehouse.code}</h3>
+              <p><strong>Contact No:</strong> {warehouse.contactNo}</p>
+              <p><strong>Address:</strong> {warehouse.address}</p>
+              <p><strong>Stores Registered:</strong> {warehouse.storesCount}</p>
+            </div>
+          ))
+        ) : (
+          <p>No warehouses found.</p>
+        )}
+      </div>
     </div>
   );
 };
