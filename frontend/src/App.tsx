@@ -11,8 +11,8 @@ function App() {
     
    {/* <Login /> */}
   {/* < SignupForm /> */}
-  <StoreManagement />
-  {/* <WarehouseManagement/> */}
+  {/* <StoreManagement /> */}
+  <WarehouseManagement/>
     </>
   )
 }
