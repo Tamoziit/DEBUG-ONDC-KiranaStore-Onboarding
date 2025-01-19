@@ -1,9 +1,18 @@
+
+import SignupForm from './signup';
+import Login from './login';
+import StoreManagement from './store';
+import WarehouseManagement from './warehouse';
+
 function App() {
   return (
     <>
-      <h1 className="text-3xl font-bold underline text-red-600">
-      Hello world!
-    </h1>
+    
+    
+   {/* <Login /> */}
+  {/* < SignupForm /> */}
+  <StoreManagement />
+  {/* <WarehouseManagement/> */}
     </>
   )
 }
