@@ -12,7 +12,20 @@ const WarehouseManagement: React.FC = () => {
   const [warehouseCode, setWarehouseCode] = useState<string>("");
   const [warehouseContact, setWarehouseContact] = useState<string>("");
   const [warehouseAddress, setWarehouseAddress] = useState<string>("");
-  const [warehouseList, setWarehouseList] = useState<Warehouse[]>([]);
+  const [warehouseList, setWarehouseList] = useState<Warehouse[]>([
+    {
+      "code": "W123",
+      "contactNo": "+1234567890",
+      "address": "123 Warehouse Street, City, Country",
+      "storesCount": 50
+    },
+    {
+      "code": "W123",
+      "contactNo": "+1234567890",
+      "address": "123 Warehouse Street, City, Country",
+      "storesCount": 50
+    }
+  ]);
 
   const createWarehouse = async (event: React.FormEvent) => {
     event.preventDefault();
