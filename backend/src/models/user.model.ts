@@ -44,7 +44,7 @@ const UserSchema = new mongoose.Schema({
             default: []
         }
     ]
-}, {timestamps: true});
+}, { timestamps: true });
 
 const User = OnboardingDB!.model("User", UserSchema);
 export default User;

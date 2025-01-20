@@ -51,8 +51,8 @@ export interface LoginRequestBody {
 
 export interface WarehouseRequestBody {
     code: string;
-    contactNo: string,
-    address: string
+    contactNo: string;
+    address: string;
 }
 
 export interface StoreRequestBody {
@@ -64,6 +64,7 @@ export interface StoreRequestBody {
     inventory: [
         {
             item: string,
+            url: string,
             quantity: number,
             costPerItem: number,
             mrp: number
@@ -102,6 +103,7 @@ export interface StoreBody {
 export interface InventoryItem {
     _id: Types.ObjectId;
     item: string;
+    url: string;
     mrp: number;
     quantity: number;
 }

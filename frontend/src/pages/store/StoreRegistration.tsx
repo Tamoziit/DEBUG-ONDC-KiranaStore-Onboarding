@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 
-const StoreManagement: React.FC = () => {
+const RegisterStore: React.FC = () => {
   const [storeName, setStoreName] = useState<string>("");
   const [gstNo, setGstNo] = useState<string>("");
   const [address, setAddress] = useState<string>("");
   const [contactNo, setContactNo] = useState<string>("");
   const [warehouseId, setWarehouseId] = useState<string>("");
   const [inventory, setInventory] = useState<object[]>([]);
-  const [storeList, setStoreList] = useState<object[]>([]);
   const [step, setStep] = useState<number>(1);
 
   // Temporary item state for inventory addition
@@ -38,21 +37,6 @@ const StoreManagement: React.FC = () => {
       alert(result.message || JSON.stringify(result));
     } catch (error) {
       console.error("Error registering store:", error);
-      alert("An error occurred. Please try again.");
-    }
-  };
-
-  const fetchStores = async () => {
-    try {
-      const response = await fetch("/api/v1/store/my-stores", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-
-      const stores = await response.json();
-      setStoreList(stores);
-    } catch (error) {
-      console.error("Error fetching stores:", error);
       alert("An error occurred. Please try again.");
     }
   };
@@ -317,38 +301,8 @@ const StoreManagement: React.FC = () => {
           </form>
         </>
       )}
-
-      <h2 style={{ color: "#333", fontSize: "1.8rem", marginTop: "30px" }}>My Stores</h2>
-      <button
-        onClick={fetchStores}
-        style={{
-          backgroundColor: "#007BFF",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-          padding: "10px 20px",
-          cursor: "pointer",
-          fontSize: "1rem",
-        }}
-      >
-        Fetch Stores
-      </button>
-      <pre
-        id="storeList"
-        style={{
-          marginTop: "20px",
-          backgroundColor: "#fff",
-          padding: "15px",
-          borderRadius: "5px",
-          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-          whiteSpace: "pre-wrap",
-          wordWrap: "break-word",
-        }}
-      >
-        {storeList.length > 0 ? JSON.stringify(storeList, null, 2) : ""}
-      </pre>
     </div>
   );
 };
 
-export default StoreManagement;
+export default RegisterStore;
