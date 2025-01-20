@@ -48,3 +48,33 @@ export interface Warehouse {
     inventoryCost: number;
     income: number;
 }
+
+export interface StoreRegistrationParams {
+    name: string;
+    gstNo: string;
+    address: string;
+    contactNo: string;
+    warehouseId: string;
+    inventory: InventoryParams[];
+}
+
+export interface InventoryParams {
+    item: string;
+    url: string;
+    quantity: number | null;
+    costPerItem: number | null;
+    mrp: number | null;
+}
+
+export interface StoreProps {
+    _id: string;
+    name: string;
+    gstNo: string;
+    address: string;
+    contactNo: string;
+    warehouseId: string;
+    warehouseCode: string;
+    inventory: InventoryParams[];
+    incomePerMonth: number[];
+    incomePerYear: number[];
+}

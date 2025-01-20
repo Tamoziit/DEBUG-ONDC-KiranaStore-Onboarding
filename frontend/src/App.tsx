@@ -8,6 +8,7 @@ import SignupForm from './pages/auth/Signup';
 import RegisterStore from './pages/store/StoreRegistration';
 import WarehouseList from './pages/warehouse/Warehouse';
 import MyStores from './pages/store/MyStores';
+import Store from './pages/store/Store';
 
 function App() {
   const { authUser } = useAuthContext();
@@ -20,6 +21,7 @@ function App() {
         <Route path="/signup" element={authUser ? <Navigate to="/" /> : <SignupForm />} />
         <Route path="/stores/register/:id" element={authUser ? <RegisterStore /> : <Navigate to="/" />} />
         <Route path="/stores/my-stores" element={authUser ? <MyStores /> : <Navigate to="/" />} />
+        <Route path="/stores/my-stores/:id" element={authUser ? <Store /> : <Navigate to="/" />} />
         <Route path="/warehouse/explore" element={authUser ? <WarehouseList /> : <Navigate to="/" />} />
       </Routes>
 

@@ -1,168 +1,149 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { InventoryParams, StoreRegistrationParams } from "../../types";
+import handleImageUpload from "../../utils/handleImageUpload";
+import useRegisterStore from "../../hooks/useRegisterStore";
 
 const RegisterStore: React.FC = () => {
-  const [storeName, setStoreName] = useState<string>("");
-  const [gstNo, setGstNo] = useState<string>("");
-  const [address, setAddress] = useState<string>("");
-  const [contactNo, setContactNo] = useState<string>("");
-  const [warehouseId, setWarehouseId] = useState<string>("");
-  const [inventory, setInventory] = useState<object[]>([]);
+  const { id } = useParams();
+  const [inputs, setInputs] = useState<StoreRegistrationParams>({
+    name: "",
+    gstNo: "",
+    address: "",
+    contactNo: "",
+    warehouseId: id!,
+    inventory: [],
+  });
+  const [inventoryList, setInventoryList] = useState<InventoryParams[]>([]);
+  const [inventoryItem, setInventoryItem] = useState<InventoryParams>({
+    item: "",
+    url: "",
+    quantity: null,
+    costPerItem: null,
+    mrp: null
+  });
   const [step, setStep] = useState<number>(1);
-
-  // Temporary item state for inventory addition
-  const [itemName, setItemName] = useState<string>("");
-  const [quantity, setQuantity] = useState<number | "">("");
-  const [costPerItem, setCostPerItem] = useState<number | "">("");
-  const [mrp, setMrp] = useState<number | "">("");
-
-  const registerStore = async (event: React.FormEvent) => {
-    event.preventDefault();
-    try {
-      const data = {
-        name: storeName,
-        gstNo,
-        address,
-        contactNo,
-        warehouseId,
-        inventory,
-      };
-
-      const response = await fetch("/api/v1/store/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-      alert(result.message || JSON.stringify(result));
-    } catch (error) {
-      console.error("Error registering store:", error);
-      alert("An error occurred. Please try again.");
-    }
-  };
+  const [uploading, setUploading] = useState<boolean>(false);
+  const { loading, register } = useRegisterStore();
 
   const addInventoryItem = () => {
-    if (!itemName || quantity === "" || costPerItem === "" || mrp === "") {
+    if (!inventoryItem.item || !inventoryItem.url || inventoryItem.quantity === null || inventoryItem.costPerItem === null || inventoryItem.mrp === null) {
       alert("Please fill all inventory fields.");
       return;
     }
     const newItem = {
-      itemName,
-      quantity: Number(quantity),
-      costPerItem: Number(costPerItem),
-      mrp: Number(mrp),
+      item: inventoryItem.item,
+      url: inventoryItem.url,
+      quantity: inventoryItem.quantity,
+      costPerItem: inventoryItem.costPerItem,
+      mrp: inventoryItem.mrp,
     };
-    setInventory([...inventory, newItem]);
-    setItemName("");
-    setQuantity("");
-    setCostPerItem("");
-    setMrp("");
+    setInventoryList([...inventoryList, newItem]);
+    setInventoryItem({
+      item: "",
+      url: "",
+      quantity: null,
+      costPerItem: null,
+      mrp: null
+    });
   };
 
+  useEffect(() => {
+    setInputs((prevInputs) => ({ ...prevInputs, inventory: inventoryList }));
+  }, [inventoryList]);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUploading(true);
+    if (e.target.files) {
+      const file = e.target.files[0];
+      const uploadedUrl = await handleImageUpload(file);
+      setInventoryItem((prev) => ({ ...prev, url: uploadedUrl }));
+    }
+    setUploading(false);
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await register(inputs);
+  }
+
   return (
-    <div style={{ maxWidth: "900px", margin: "0 auto", padding: "20px", fontFamily: "Arial, sans-serif", backgroundColor: "#f4f4f9" }}>
-      <h1 style={{ textAlign: "center", color: "#333", fontSize: "2.5rem" }}>Store Management</h1>
+    <div className="max-w-4xl mx-auto p-6 bg-gray-100 shadow-md rounded-lg">
+      <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">Store Management</h1>
 
       {step === 1 && (
         <>
-          <h2 style={{ color: "#333", fontSize: "1.8rem", marginTop: "30px" }}>Step 1: General Store Information</h2>
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Step 1: General Store Information</h2>
           <form
             onSubmit={(e) => {
               e.preventDefault();
               setStep(2);
             }}
+            className="space-y-4"
           >
-            <div style={{ marginBottom: "15px" }}>
-              <label htmlFor="storeName" style={{ display: "block", fontSize: "1rem", marginBottom: "5px", color: "#333" }}>Store Name</label>
+            <div>
+              <label htmlFor="storeName" className="block text-gray-700 font-medium mb-1">
+                Store Name
+              </label>
               <input
                 id="storeName"
                 type="text"
                 placeholder="Store Name"
-                value={storeName}
-                onChange={(e) => setStoreName(e.target.value)}
+                value={inputs.name}
+                onChange={(e) => setInputs({ ...inputs, name: e.target.value })}
                 required
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  fontSize: "1rem",
-                  border: "1px solid #ddd",
-                  borderRadius: "5px",
-                  boxSizing: "border-box",
-                }}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
               />
             </div>
 
-            <div style={{ marginBottom: "15px" }}>
-              <label htmlFor="storeGstNo" style={{ display: "block", fontSize: "1rem", marginBottom: "5px", color: "#333" }}>GST No</label>
+            <div>
+              <label htmlFor="storeGstNo" className="block text-gray-700 font-medium mb-1">
+                GST No
+              </label>
               <input
                 id="storeGstNo"
                 type="text"
                 placeholder="GST No"
-                value={gstNo}
-                onChange={(e) => setGstNo(e.target.value)}
+                value={inputs.gstNo}
+                onChange={(e) => setInputs({ ...inputs, gstNo: e.target.value })}
                 required
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  fontSize: "1rem",
-                  border: "1px solid #ddd",
-                  borderRadius: "5px",
-                  boxSizing: "border-box",
-                }}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
               />
             </div>
 
-            <div style={{ marginBottom: "15px" }}>
-              <label htmlFor="storeAddress" style={{ display: "block", fontSize: "1rem", marginBottom: "5px", color: "#333" }}>Address</label>
+            <div>
+              <label htmlFor="storeAddress" className="block text-gray-700 font-medium mb-1">
+                Address
+              </label>
               <input
                 id="storeAddress"
                 type="text"
                 placeholder="Address"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
+                value={inputs.address}
+                onChange={(e) => setInputs({ ...inputs, address: e.target.value })}
                 required
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  fontSize: "1rem",
-                  border: "1px solid #ddd",
-                  borderRadius: "5px",
-                  boxSizing: "border-box",
-                }}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
               />
             </div>
 
-            <div style={{ marginBottom: "15px" }}>
-              <label htmlFor="storeContactNo" style={{ display: "block", fontSize: "1rem", marginBottom: "5px", color: "#333" }}>Contact No</label>
+            <div>
+              <label htmlFor="storeContactNo" className="block text-gray-700 font-medium mb-1">
+                Contact No
+              </label>
               <input
                 id="storeContactNo"
                 type="text"
                 placeholder="Contact No"
-                value={contactNo}
-                onChange={(e) => setContactNo(e.target.value)}
+                value={inputs.contactNo}
+                onChange={(e) => setInputs({ ...inputs, contactNo: e.target.value })}
                 required
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  fontSize: "1rem",
-                  border: "1px solid #ddd",
-                  borderRadius: "5px",
-                  boxSizing: "border-box",
-                }}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
               />
             </div>
 
             <button
               type="submit"
-              style={{
-                backgroundColor: "#4CAF50",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                padding: "10px 20px",
-                cursor: "pointer",
-                fontSize: "1rem",
-              }}
+              className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
             >
               Next Step
             </button>
@@ -172,113 +153,71 @@ const RegisterStore: React.FC = () => {
 
       {step === 2 && (
         <>
-          <h2 style={{ color: "#333", fontSize: "1.8rem", marginTop: "30px" }}>Step 2: Warehouse and Inventory Details</h2>
-          <form onSubmit={registerStore}>
-            <div style={{ marginBottom: "15px" }}>
-              <label htmlFor="warehouseId" style={{ display: "block", fontSize: "1rem", marginBottom: "5px", color: "#333" }}>Warehouse ID</label>
-              <input
-                id="warehouseId"
-                type="text"
-                placeholder="Warehouse ID"
-                value={warehouseId}
-                onChange={(e) => setWarehouseId(e.target.value)}
-                required
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  fontSize: "1rem",
-                  border: "1px solid #ddd",
-                  borderRadius: "5px",
-                  boxSizing: "border-box",
-                }}
-              />
-            </div>
-
-            <div style={{ marginBottom: "15px" }}>
-              <h3 style={{ color: "#333", fontSize: "1.5rem" }}>Inventory</h3>
-              <div style={{ marginBottom: "15px" }}>
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Step 2: Warehouse and Inventory Details</h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">Inventory</h3>
+              <div className="space-y-2">
                 <input
                   type="text"
                   placeholder="Item Name"
-                  value={itemName}
-                  onChange={(e) => setItemName(e.target.value)}
-                  style={{
-                    width: "100%",
-                    padding: "10px",
-                    fontSize: "1rem",
-                    border: "1px solid #ddd",
-                    borderRadius: "5px",
-                    boxSizing: "border-box",
-                  }}
+                  value={inventoryItem.item}
+                  onChange={(e) => setInventoryItem({ ...inventoryItem, item: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                 />
-              </div>
-              <div style={{ marginBottom: "15px" }}>
                 <input
                   type="number"
                   placeholder="Quantity"
-                  value={quantity}
-                  onChange={(e) => setQuantity(Number(e.target.value))}
-                  style={{
-                    width: "100%",
-                    padding: "10px",
-                    fontSize: "1rem",
-                    border: "1px solid #ddd",
-                    borderRadius: "5px",
-                    boxSizing: "border-box",
-                  }}
+                  value={inventoryItem.quantity!}
+                  onChange={(e) => setInventoryItem({ ...inventoryItem, quantity: Number(e.target.value) })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                 />
-              </div>
-              <div style={{ marginBottom: "15px" }}>
                 <input
                   type="number"
                   placeholder="Cost Per Item"
-                  value={costPerItem}
-                  onChange={(e) => setCostPerItem(Number(e.target.value))}
-                  style={{
-                    width: "100%",
-                    padding: "10px",
-                    fontSize: "1rem",
-                    border: "1px solid #ddd",
-                    borderRadius: "5px",
-                    boxSizing: "border-box",
-                  }}
+                  value={inventoryItem.costPerItem!}
+                  onChange={(e) => setInventoryItem({ ...inventoryItem, costPerItem: Number(e.target.value) })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                 />
-              </div>
-              <div style={{ marginBottom: "15px" }}>
                 <input
                   type="number"
                   placeholder="MRP"
-                  value={mrp}
-                  onChange={(e) => setMrp(Number(e.target.value))}
-                  style={{
-                    width: "100%",
-                    padding: "10px",
-                    fontSize: "1rem",
-                    border: "1px solid #ddd",
-                    borderRadius: "5px",
-                    boxSizing: "border-box",
-                  }}
+                  value={inventoryItem.mrp!}
+                  onChange={(e) => setInventoryItem({ ...inventoryItem, mrp: Number(e.target.value) })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                 />
+
+                <input
+                  type="file"
+                  onChange={handleFileChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+
+                {inventoryItem.url && (
+                  <div className="mt-4">
+                    <h4 className="text-gray-700">Uploaded Image:</h4>
+                    <img
+                      src={inventoryItem.url}
+                      alt="Uploaded Inventory"
+                      className="w-full h-auto border rounded-lg mt-2"
+                    />
+                  </div>
+                )}
+
+                <button
+                  type="button"
+                  onClick={addInventoryItem}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  disabled={loading || uploading}
+                >
+                  Add Item
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={addInventoryItem}
-                style={{
-                  backgroundColor: "#4CAF50",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "5px",
-                  padding: "10px 20px",
-                  cursor: "pointer",
-                  fontSize: "1rem",
-                }}
-              >
-                Add Item
-              </button>
-              <ul>
-                {inventory.map((item: any, index) => (
-                  <li key={index}>
-                    {item.itemName} - {item.quantity} units @ ₹{item.costPerItem} (MRP: ₹{item.mrp})
+
+              <ul className="mt-4 space-y-2">
+                {inventoryList.map((item: any, index) => (
+                  <li key={index} className="text-gray-700">
+                    {item.item} - {item.quantity} units @ ₹{item.costPerItem} (MRP: ₹{item.mrp})
                   </li>
                 ))}
               </ul>
@@ -286,15 +225,8 @@ const RegisterStore: React.FC = () => {
 
             <button
               type="submit"
-              style={{
-                backgroundColor: "#4CAF50",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                padding: "10px 20px",
-                cursor: "pointer",
-                fontSize: "1rem",
-              }}
+              className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+              disabled={loading || uploading}
             >
               Register Store
             </button>
