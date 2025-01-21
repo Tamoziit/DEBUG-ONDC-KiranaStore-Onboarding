@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Warehouse } from "../../types";
 import useGetWarehouse from "../../hooks/useGetWarehouses";
 import WarehouseCard from "../../components/WarehouseCard";
+import Spinner from "../../components/Spinner";
 
 const WarehouseList: React.FC = () => {
   const [warehouseList, setWarehouseList] = useState<Warehouse[]>([]);
@@ -42,9 +43,8 @@ const WarehouseList: React.FC = () => {
           </h2>
 
           {loading ? (
-            <div className="text-center">
-              <div className="inline-block w-16 h-16 border-4 border-t-4 border-teal-500 border-solid rounded-full animate-spin"></div>
-              <p className="text-lg mt-4 text-gray-900">Loading...</p>
+            <div className="w-full flex items-center justify-center">
+              <Spinner size="large" />
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">

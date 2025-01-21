@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { InventoryParams, StoreRegistrationParams } from "../../types";
 import handleImageUpload from "../../utils/handleImageUpload";
 import useRegisterStore from "../../hooks/useRegisterStore";
+import Spinner from "../../components/Spinner";
+import toast from "react-hot-toast";
 
 const RegisterStore: React.FC = () => {
   const { id } = useParams();
@@ -28,7 +30,7 @@ const RegisterStore: React.FC = () => {
 
   const addInventoryItem = () => {
     if (!inventoryItem.item || !inventoryItem.url || inventoryItem.quantity === null || inventoryItem.costPerItem === null || inventoryItem.mrp === null) {
-      alert("Please fill all inventory fields.");
+      toast.error("Please fill all inventory fields.");
       return;
     }
     const newItem = {
@@ -238,7 +240,12 @@ const RegisterStore: React.FC = () => {
                     className="px-6 py-3 w-full bg-green-600 text-white text-xl font-bold rounded-lg hover:bg-green-700 transition disabled:opacity-50"
                     disabled={loading || uploading}
                   >
-                    Register Store
+                    {loading ? (
+                      <div className="w-full flex items-center justify-center">
+                        <Spinner size="small" />
+                      </div>
+                    ) : "Register Store"
+                    }
                   </button>
                 </div>
               </form>

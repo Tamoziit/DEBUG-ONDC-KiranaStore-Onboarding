@@ -78,3 +78,15 @@ export interface StoreProps {
     incomePerMonth: number[];
     incomePerYear: number[];
 }
+
+export interface WarehouseProps {
+    _id: string;
+    code: string;
+    contactNo: string;
+    address: string;
+    registeredStores: string[];
+    inventoryCost: number;
+    income: number;
+    createdAt: string;
+    updatedAt: string;
+}

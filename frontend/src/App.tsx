@@ -9,6 +9,7 @@ import RegisterStore from './pages/store/StoreRegistration';
 import WarehouseList from './pages/warehouse/Warehouse';
 import MyStores from './pages/store/MyStores';
 import Store from './pages/store/Store';
+import MyWarehouse from './pages/warehouse/MyWarehouse';
 
 function App() {
   const { authUser } = useAuthContext();
@@ -23,6 +24,7 @@ function App() {
         <Route path="/stores/my-stores" element={authUser ? <MyStores /> : <Navigate to="/" />} />
         <Route path="/stores/my-stores/:id" element={authUser ? <Store /> : <Navigate to="/" />} />
         <Route path="/warehouse/explore" element={authUser ? <WarehouseList /> : <Navigate to="/" />} />
+        <Route path="/my-warehouse/:id" element={authUser ? <MyWarehouse /> : <Navigate to="/" />} />
       </Routes>
 
       <Toaster />

@@ -3,6 +3,7 @@ import { StoreProps } from "../../types";
 import StoreCard from "../../components/StoreCard";
 import useGetMyStores from "../../hooks/useGetMyStores";
 import { Link } from "react-router-dom";
+import Spinner from "../../components/Spinner";
 
 const MyStores = () => {
   const [myStores, setMyStores] = useState<StoreProps[]>([]);
@@ -29,7 +30,9 @@ const MyStores = () => {
           Store Directory
         </h1>
         {loading ? (
-          <h1>Loading...</h1>
+          <div className="w-full flex items-center justify-center">
+            <Spinner size="large" />
+          </div>
         ) : (
           myStores?.length === 0 ? (
             <div className="w-full flex items-center justify-center p-2">

@@ -4,6 +4,7 @@ import handleImageUpload from "../utils/handleImageUpload";
 import useUpdateInventory from "../hooks/useUpdateInventory";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
+import Spinner from "./Spinner";
 
 const InventoryUpdateForm = () => {
 	const [inventoryList, setInventoryList] = useState<InventoryParams[]>([]);
@@ -20,7 +21,7 @@ const InventoryUpdateForm = () => {
 
 	const addInventoryItem = () => {
 		if (!inventoryItem.item || !inventoryItem.url || inventoryItem.quantity === null || inventoryItem.costPerItem === null || inventoryItem.mrp === null) {
-			alert("Please fill all inventory fields.");
+			toast.error("Please fill all inventory fields.");
 			return;
 		}
 		const newItem = {
@@ -108,7 +109,7 @@ const InventoryUpdateForm = () => {
 									<img
 										src={inventoryItem.url}
 										alt="Uploaded Inventory"
-										className="w-full h-auto border rounded-lg mt-2"
+										className="w-[40%] lg:w-[20%] h-auto border rounded-lg mt-2"
 									/>
 								</div>
 							)}
@@ -119,7 +120,7 @@ const InventoryUpdateForm = () => {
 								className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
 								disabled={loading || uploading}
 							>
-								Add Item
+								Add to Inventory
 							</button>
 						</div>
 
@@ -132,13 +133,15 @@ const InventoryUpdateForm = () => {
 						</ul>
 					</div>
 
-					<button
-						type="submit"
-						className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition disabled:opacity-50"
-						disabled={loading || uploading}
-					>
-						Update Inventory
-					</button>
+					<div className="w-full flex justify-center items-center pt-4">
+						<button
+							type="submit"
+							className="px-6 py-3 w-full bg-green-600 text-white text-xl font-bold rounded-lg hover:bg-green-700 transition disabled:opacity-50"
+							disabled={loading || uploading}
+						>
+							{loading ? <Spinner size="small" /> : "Update Inventory"}
+						</button>
+					</div>
 				</form>
 			</div>
 		</div>

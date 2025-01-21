@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { SignupInputs } from "../../types";
 import useSignup from "../../hooks/useSignup";
+import Spinner from "../../components/Spinner";
 
 const SignupForm = () => {
   const [inputs, setInputs] = useState<SignupInputs>({
@@ -12,7 +13,7 @@ const SignupForm = () => {
     gender: "",
     aadharNo: ""
   });
-  const {loading, signup} = useSignup();
+  const { loading, signup } = useSignup();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,15 +22,15 @@ const SignupForm = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 relative">
-    
-    <div
-      className="absolute inset-0 w-full h-full bg-cover bg-center z-0"
-      style={{
-        backgroundImage: `url('/loginbg.jpg')`,
-      }}
-    ></div>
 
-     
+      <div
+        className="absolute inset-0 w-full h-full bg-cover bg-center z-0"
+        style={{
+          backgroundImage: `url('/loginbg.jpg')`,
+        }}
+      ></div>
+
+
       <div className="bg-white bg-opacity-90 shadow-lg rounded-lg p-8 w-full max-w-md z-20">
         <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Sign Up</h2>
         <form id="signup-form" onSubmit={handleSubmit}>
@@ -143,10 +144,12 @@ const SignupForm = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white font-medium py-2 rounded-lg hover:bg-blue-700 focus:ring focus:ring-blue-300 focus:outline-none"
+            className="w-full bg-blue-600 text-white font-medium py-2 rounded-lg hover:bg-blue-700 focus:ring focus:ring-blue-300 focus:outline-non"
             disabled={loading}
           >
-            Sign Up
+            <div className="flex w-full items-center justify-center">
+              {loading ? <Spinner size="small" /> : "Signup"}
+            </div>
           </button>
         </form>
 

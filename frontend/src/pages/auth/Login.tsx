@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import useLogin from "../../hooks/useLogin";
+import Spinner from "../../components/Spinner";
 
 
 const Login: React.FC = () => {
@@ -17,15 +18,15 @@ const Login: React.FC = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 relative">
-      
-    <div
-    className="absolute inset-0 w-full h-full bg-cover bg-center z-0"
-    style={{
-      backgroundImage: `url('/loginbg.jpg')`,
-    }}
-    ></div>
 
-      
+      <div
+        className="absolute inset-0 w-full h-full bg-cover bg-center z-0"
+        style={{
+          backgroundImage: `url('/loginbg.jpg')`,
+        }}
+      ></div>
+
+
       <div className="relative bg-white bg-opacity-80 shadow-lg rounded-lg p-6 w-96 z-10">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
         <form id="login-form" onSubmit={handleSubmit}>
@@ -62,7 +63,9 @@ const Login: React.FC = () => {
             className="w-full bg-indigo-600 text-white font-medium py-2 px-4 rounded-md shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             disabled={loading}
           >
-            Login
+            <div className="flex w-full items-center justify-center">
+              {loading ? <Spinner size="small" /> : "Login"}
+            </div>
           </button>
         </form>
 

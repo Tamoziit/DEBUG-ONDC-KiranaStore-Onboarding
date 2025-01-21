@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { InventoryParams, StoreProps } from "../../types";
 import { useEffect, useState } from "react";
 import useGetStoreById from "../../hooks/useGetStoreById";
@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import BarChart from "../../components/BarChart";
 import Modal from "../../components/Modal";
 import InventoryUpdateForm from "../../components/InventoryUpdateForm";
+import Spinner from "../../components/Spinner";
 
 interface IncomeBlockProps {
 	incomePerMonth: number[];
@@ -22,6 +23,7 @@ const Store = () => {
 	const [store, setStore] = useState<StoreProps | null>(null);
 	const { loading, getStore } = useGetStoreById();
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const navigate = useNavigate();
 
 	const fetchStore = async () => {
 		if (id) {
@@ -45,8 +47,8 @@ const Store = () => {
 			}}>
 			<div className="bg-white/40 backdrop-blur-xl border border-white/30 rounded-lg p-6 shadow-lg">
 				{loading ? (
-					<div>
-						Loading...
+					<div className="w-full flex items-center justify-center">
+						<Spinner size="large" />
 					</div>
 				) : (
 					store ? (
@@ -69,6 +71,13 @@ const Store = () => {
 									<strong className="text-gray-600">Warehouse Code:</strong> {store.warehouseCode}
 								</p>
 							</div>
+
+							<button
+								className="flex items-center justify-center bg-orange-600 hover:bg-orange-700 text-gray-100 font-medium py-2 px-4 rounded-lg mb-4"
+								onClick={() => navigate(`/my-warehouse/${store.warehouseId}`)}
+							>
+								Visit My Warehouse
+							</button>
 
 							<IncomeBlock
 								incomePerMonth={store.incomePerMonth}
@@ -157,7 +166,7 @@ const InventoryBlock = ({ inventory, onAddInventory }: InventoryBlockProps) => {
 			</table>
 			<div className="mt-4">
 				<button
-					className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700"
+					className="bg-orange-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-orange-700"
 					onClick={onAddInventory}
 				>
 					Add Inventory
