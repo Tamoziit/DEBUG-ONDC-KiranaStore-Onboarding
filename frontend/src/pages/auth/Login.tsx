@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import useLogin from "../../hooks/useLogin";
 
+
 const Login: React.FC = () => {
   const [inputs, setInputs] = useState({
     mobileNo: "",
@@ -16,17 +17,15 @@ const Login: React.FC = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 relative">
-      {/* Background Video */}
-      <video
-        autoPlay
-        loop
-        muted
-        className="absolute inset-0 w-full h-full object-cover z-0"
-      >
-        <source src="/loginbg.mp4" type="video/mp4" />
-      </video>
+      
+    <div
+    className="absolute inset-0 w-full h-full bg-cover bg-center z-0"
+    style={{
+      backgroundImage: `url('/loginbg.jpg')`,
+    }}
+    ></div>
 
-      {/* Card Content */}
+      
       <div className="relative bg-white bg-opacity-80 shadow-lg rounded-lg p-6 w-96 z-10">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
         <form id="login-form" onSubmit={handleSubmit}>

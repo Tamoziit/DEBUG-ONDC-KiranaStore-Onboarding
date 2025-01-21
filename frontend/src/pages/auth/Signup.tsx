@@ -20,18 +20,16 @@ const SignupForm = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 relative">
-      {/* Background Video */}
-      <video
-        autoPlay
-        loop
-        muted
-        className="absolute inset-0 w-full h-full object-cover z-10"
-      >
-        <source src="/loginbg.mp4" type="video/mp4" />
-      </video>
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 relative">
+    
+    <div
+      className="absolute inset-0 w-full h-full bg-cover bg-center z-0"
+      style={{
+        backgroundImage: `url('/loginbg.jpg')`,
+      }}
+    ></div>
 
-      {/* Card Content */}
+     
       <div className="bg-white bg-opacity-90 shadow-lg rounded-lg p-8 w-full max-w-md z-20">
         <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Sign Up</h2>
         <form id="signup-form" onSubmit={handleSubmit}>
