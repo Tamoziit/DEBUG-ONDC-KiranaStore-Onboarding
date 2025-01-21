@@ -5,6 +5,7 @@ import Store from "../models/store.model";
 import { Types } from "mongoose";
 import getCurrentMonth from "../utils/getCurrentMonth";
 import getYearIndex from "../utils/getYearIndex";
+import User from "../models/user.model";
 
 export const createWarehouse: RequestHandler<{}, {}, WarehouseRequestBody> = async (req, res) => {
     try {
@@ -45,51 +46,66 @@ export const createWarehouse: RequestHandler<{}, {}, WarehouseRequestBody> = asy
 
 export const listSimilarItems = async (req: Request, res: Response) => {
     try {
-        const { item, warehouseId }: SearchInput = req.body;
+        const item = req.query.item as string;
 
-        const warehouse = await Warehouse.findById(warehouseId);
-        if (!warehouse) {
-            res.status(400).json({ error: "Warehouse not found" });
+        if (!item || typeof item !== "string") {
+            res.status(400).json({ error: "Item name is required and must be a string" });
             return;
         }
 
-        const registeredStores = warehouse.registeredStores;
-        const stores = await Store.find({ _id: { $in: registeredStores } });
-        if (!stores || stores.length === 0) {
-            res.status(400).json({ error: "No registered stores found for this warehouse" });
+        // Fetch all warehouses
+        const warehouses = await Warehouse.find();
+        if (!warehouses || warehouses.length === 0) {
+            res.status(400).json({ error: "No warehouses found" });
             return;
         }
 
         const similarItems: Array<{
             _id: Types.ObjectId;
             storeId: Types.ObjectId;
+            owner: Types.ObjectId;
             storeName: string;
+            warehouseId: Types.ObjectId;
+            warehouseCode: string;
             item: string;
+            url: string
             quantity: number;
             mrp: number;
         }> = [];
 
-        for (const store of stores) {
-            const matchedItems = store.inventory.filter((inv: any) =>
-                inv.item.toLowerCase().includes(item.toLowerCase())
-            );
+        for (const warehouse of warehouses) {
+            const registeredStores = warehouse.registeredStores;
+            const stores = await Store.find({ _id: { $in: registeredStores } });
 
-            matchedItems.forEach((matchedItem: any) => {
-                similarItems.push({
-                    _id: matchedItem._id,
-                    storeId: store._id,
-                    storeName: store.name,
-                    item: matchedItem.item,
-                    quantity: matchedItem.quantity,
-                    mrp: matchedItem.mrp,
-                });
-            });
+            if (stores && stores.length > 0) {
+                for (const store of stores) {
+                    const matchedItems = store.inventory.filter((inv: any) =>
+                        inv.item.toLowerCase().includes(item.toLowerCase())
+                    );
+
+                    matchedItems.forEach((matchedItem: any) => {
+                        similarItems.push({
+                            _id: matchedItem._id,
+                            storeId: store._id,
+                            owner: store.owner,
+                            storeName: store.name,
+                            warehouseId: warehouse._id,
+                            warehouseCode: warehouse.code,
+                            item: matchedItem.item,
+                            url: matchedItem.url,
+                            quantity: matchedItem.quantity,
+                            mrp: matchedItem.mrp,
+                        });
+                    });
+                }
+            }
         }
 
         if (similarItems.length === 0) {
             res.status(400).json({ error: "No items matching the search query found in any store" });
             return;
         }
+
         res.status(200).json(similarItems);
     } catch (error) {
         console.error("Error in listSimilarItems controller", error);
@@ -125,10 +141,16 @@ export const processOrder = async (req: Request, res: Response) => {
             }
         }
 
-        const currentMonth = getCurrentMonth();
-        store.incomePerMonth[currentMonth] += inventoryItem.mrp * quantity;
-        store.incomePerYear[getYearIndex(req.user!)] += inventoryItem.mrp * quantity;
-        await store.save();
+        const seller = await User.findById(store.owner);
+        if (seller) {
+            const currentMonth = getCurrentMonth();
+            store.incomePerMonth[currentMonth] += inventoryItem.mrp * quantity;
+            store.incomePerYear[getYearIndex(seller)] += inventoryItem.mrp * quantity;
+            await store.save();
+        } else {
+            res.status(400).json({ error: "Seller not found or inactive" });
+            return;
+        }
 
         const warehouse = await Warehouse.findById(store.warehouseId);
         if (!warehouse) {
@@ -145,6 +167,7 @@ export const processOrder = async (req: Request, res: Response) => {
             warehouse: warehouse.code,
             store: store.name,
             item: inventoryItem.item,
+            url: inventoryItem.url,
             quantity,
             totalCost: inventoryItem.mrp * quantity,
         });
@@ -186,3 +209,65 @@ export const getWarehouseById = async (req: Request, res: Response) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 }
+
+export const getProductsFromLatestWarehouses = async (req: Request, res: Response) => {
+    try {
+        const limit = Math.min(parseInt(req.query.limit as string) || 3, 3);
+
+        const warehouses = await Warehouse.find()
+            .sort({ updatedAt: -1 })
+            .limit(limit);
+
+        if (!warehouses || warehouses.length === 0) {
+            res.status(400).json({ error: "No warehouses found" });
+            return;
+        }
+
+        const allProducts: Array<{
+            _id: Types.ObjectId;
+            storeId: Types.ObjectId;
+            owner: Types.ObjectId;
+            storeName: string;
+            warehouseId: Types.ObjectId;
+            warehouseCode: string;
+            item: string;
+            url: string
+            quantity: number;
+            mrp: number;
+        }> = [];
+
+        for (const warehouse of warehouses) {
+            const registeredStores = warehouse.registeredStores;
+            const stores = await Store.find({ _id: { $in: registeredStores } });
+
+            if (stores && stores.length > 0) {
+                for (const store of stores) {
+                    store.inventory.forEach((product: any) => {
+                        allProducts.push({
+                            _id: product._id,
+                            storeId: store._id,
+                            owner: store.owner,
+                            storeName: store.name,
+                            warehouseId: warehouse._id,
+                            warehouseCode: warehouse.code,
+                            item: product.item,
+                            url: product.url,
+                            quantity: product.quantity,
+                            mrp: product.mrp,
+                        });
+                    });
+                }
+            }
+        }
+
+        if (allProducts.length === 0) {
+            res.status(400).json({ error: "No products found in the selected warehouses" });
+            return;
+        }
+
+        res.status(200).json(allProducts);
+    } catch (error) {
+        console.error("Error in getProductsFromLatestWarehouses controller", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};

@@ -126,10 +126,10 @@ const InventoryBlock = ({ inventory }: InventoryBlockProps) => {
 								{item.quantity !== null ? item.quantity : "N/A"}
 							</td>
 							<td className="border border-gray-300 p-2">
-								{item.costPerItem !== null ? `$${item.costPerItem}` : "N/A"}
+								{item.costPerItem !== null ? `₹${item.costPerItem}` : "N/A"}
 							</td>
 							<td className="border border-gray-300 p-2">
-								{item.mrp !== null ? `$${item.mrp}` : "N/A"}
+								{item.mrp !== null ? `₹${item.mrp}` : "N/A"}
 							</td>
 						</tr>
 					))}

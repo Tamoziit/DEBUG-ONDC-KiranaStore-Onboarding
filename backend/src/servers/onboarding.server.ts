@@ -7,6 +7,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 
 import connectToOnboardingDB from "../db/onboardingDB";
+import { client } from "../redis/client";
 import adminRoutes from "../routes/admin.routes";
 import authRoutes from "../routes/auth.routes";
 import storeRoutes from "../routes/store.routes";
@@ -34,4 +35,9 @@ app.use("/api/v1/store", storeRoutes);
 app.listen(PORT1, () => {
     console.log(`Onboarding Server running on Port: ${PORT1}`);
     connectToOnboardingDB();
+    if (client) {
+        console.log("Connected to Redis");
+    } else {
+        console.log("Error in connecting to Redis")
+    }
 });

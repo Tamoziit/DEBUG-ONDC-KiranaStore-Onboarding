@@ -9,7 +9,7 @@ const StoreCard = ({ store }: StoreCardProps) => {
     const navigate = useNavigate();
 
     return (
-        <div className="relative w-96 bg-white/30 backdrop-blur-md shadow-lg rounded-lg overflow-hidden p-6">
+        <div className="relative bg-white/30 backdrop-blur-md shadow-lg rounded-lg overflow-hidden p-6">
             <div className="absolute inset-0 bg-cover bg-center opacity-20 z-0"
                 style={{ backgroundImage: `url('/Store.png')` }}>
             </div>

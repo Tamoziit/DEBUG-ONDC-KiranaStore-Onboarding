@@ -23,7 +23,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.3",
     "morgan": "^1.10.0",
-    "redis": "^4.7.0"
+    "redis": "^4.7.0",
+    "stripe": "^17.5.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

@@ -7,8 +7,10 @@ import helmet from "helmet";
 import morgan from "morgan";
 
 import connectToExchangesDB from "../db/exchangesDB";
+import stripe from "../services/stripeInit";
 import adminRoutes from "../routes/admin.routes";
 import warehouseRoutes from "../routes/warehouse.routes";
+import paymentRoutes from "../routes/payment.routes";
 
 const PORT2 = process.env.PORT2 || 8001;
 const app = express();
@@ -28,8 +30,14 @@ app.get("/api/v1", (req: Request, res: Response) => {
 
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/warehouse", warehouseRoutes);
+app.use("/api/v1/payments", paymentRoutes);
 
 app.listen(PORT2, () => {
     console.log(`Exchange Server running on Port: ${PORT2}`);
     connectToExchangesDB();
+    if (stripe) {
+        console.log("Connected to Stripe");
+    } else {
+        console.log("Error in connecting to Stripe")
+    }
 });
