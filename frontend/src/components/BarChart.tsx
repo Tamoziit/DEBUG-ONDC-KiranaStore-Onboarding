@@ -44,7 +44,7 @@ const BarChart = ({ labels, data, title }: BarChartProps) => {
         },
     };
 
-    return <Bar data={chartData} options={options} />;
+    return <Bar data={chartData} options={options} className="max-h-[300px]" />;
 };
 
 export default BarChart;

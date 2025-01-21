@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { StoreRequestBody, User } from "../types/types";
+import { InventoryItem, StoreRequestBody, User } from "../types/types";
 import Warehouse from "../models/warehouse.model";
 import Store from "../models/store.model";
 import UserModel from "../models/user.model";
@@ -87,7 +87,7 @@ export const getMyStores = async (req: Request, res: Response) => {
     try {
         const storeIds = req.user?.stores;
         if (!storeIds || storeIds.length === 0) {
-            res.status(400).json({ error: "No stores registered" });
+            res.status(200).json([]);
             return;
         }
 
@@ -97,7 +97,7 @@ export const getMyStores = async (req: Request, res: Response) => {
         const filteredStores = stores.filter((store) => store !== null);
 
         if (filteredStores.length === 0) {
-            res.status(400).json({ error: "No stores found" });
+            res.status(200).json([]);
             return;
         }
 
@@ -125,5 +125,31 @@ export const getStoreById = async (req: Request, res: Response) => {
     } catch (error) {
         console.error("Error in getStoreById controller", error);
         res.status(500).json({ error: "Internal Server Error" });
+    }
+}
+
+export const updateInventory = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const newItems: InventoryItem[] = req.body;
+
+        if (!Array.isArray(newItems) || newItems.some(item => !item.item || !item.url || !item.quantity || !item.costPerItem || !item.mrp)) {
+            res.status(400).json({ message: "All inventory items must have the required fields." });
+            return;
+        }
+
+        const store = await Store.findById(id);
+        if (!store) {
+            res.status(400).json({ message: "Store not found." });
+            return;
+        }
+
+        store.inventory.push(...newItems);
+        await store.save();
+
+        res.status(200).json({ message: "Item added to inventory successfully." });
+    } catch (error) {
+        console.error("Error in updateInventory controller", error);
+        res.status(500).json({ message: "An error occurred while adding the item to the inventory.", error });
     }
 }

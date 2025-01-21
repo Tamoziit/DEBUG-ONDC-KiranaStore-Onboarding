@@ -104,6 +104,7 @@ export interface InventoryItem {
     _id: Types.ObjectId;
     item: string;
     url: string;
+    costPerItem: number,
     mrp: number;
     quantity: number;
 }

@@ -10,9 +10,7 @@ const StoreCard = ({ store }: StoreCardProps) => {
 
     return (
         <div className="relative bg-white/30 backdrop-blur-md shadow-lg rounded-lg overflow-hidden p-6">
-            <div className="absolute inset-0 bg-cover bg-center opacity-20 z-0"
-                style={{ backgroundImage: `url('/Store.png')` }}>
-            </div>
+            <img src="/Store.png" alt="Store-placeholder" />
 
             <div className="relative z-10">
                 <h2 className="text-2xl font-bold text-gray-800">{store.name}</h2>
