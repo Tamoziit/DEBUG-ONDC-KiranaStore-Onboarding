@@ -18,17 +18,15 @@ const WarehouseList: React.FC = () => {
 
   return (
     <div
-      className="min-h-screen bg-cover bg-center pb-8 px-6" 
+      className="min-h-screen bg-cover bg-center pb-8 px-6"
       style={{
-        backgroundImage: "url('/loginbg.jpg')", 
+        backgroundImage: "url('/loginbg.jpg')",
       }}
     >
-      <div className="mx-auto">
-
-        
+      <div className="flex w-full flex-col items-center justify-center">
         <div className="flex justify-center items-center min-h-[40vh]">
-          <div className="w-full max-w-3xl bg-white text-gray-900 rounded-lg shadow-lg p-8 transform hover:scale-[1.01] transition duration-300 ease-in-out mt-2">
-            <h1 className="text-4xl font-extrabold text-center text-gray-900 mb-6">
+          <div className="w-full max-w-3xl bg-white/40 backdrop-blur-xl border border-white/30 text-gray-900 rounded-lg shadow-lg p-8 transform hover:scale-[1.01] transition duration-300 ease-in-out mt-2">
+            <h1 className="text-4xl font-extrabold text-center text-gray-800 mb-6">
               Warehouse Management
             </h1>
             <p className="text-lg text-center text-gray-600">
@@ -37,9 +35,9 @@ const WarehouseList: React.FC = () => {
           </div>
         </div>
 
-       
-        <div className="w-full max-w-7xl bg-white text-gray-900 rounded-lg shadow-lg p-8 ">
-          <h2 className="text-3xl font-semibold text-center text-gray-900 mb-8">
+
+        <div className="w-full max-w-7xl text-gray-800 p-8 bg-white/40 backdrop-blur-xl border border-white/30 rounded-lg shadow-lg">
+          <h2 className="text-3xl font-bold text-center text-gray-700 mb-8">
             All Warehouses
           </h2>
 
@@ -51,13 +49,8 @@ const WarehouseList: React.FC = () => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
               {warehouseList?.length > 0 ? (
-                warehouseList.map((warehouse, index) => (
-                  <div
-                    key={index}
-                    className="bg-white text-gray-900 rounded-2xl shadow-lg overflow-hidden transform transition-all hover:scale-105 hover:shadow-2xl duration-300 ease-in-out"
-                  >
-                    <WarehouseCard warehouse={warehouse} />
-                  </div>
+                warehouseList.map((warehouse, _index) => (
+                  <WarehouseCard warehouse={warehouse} />
                 ))
               ) : (
                 <p className="text-gray-900 text-lg">No warehouses found.</p>

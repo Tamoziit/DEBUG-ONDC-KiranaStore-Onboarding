@@ -74,9 +74,9 @@ const Store = () => {
 								incomePerMonth={store.incomePerMonth}
 								incomePerYear={store.incomePerYear}
 							/>
-							<InventoryBlock 
-								inventory={store.inventory} 
-								onAddInventory={() => setIsModalOpen(true)} 
+							<InventoryBlock
+								inventory={store.inventory}
+								onAddInventory={() => setIsModalOpen(true)}
 							/>
 
 							{isModalOpen && (

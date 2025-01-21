@@ -1,14 +1,12 @@
-import ProductList from './components/ProductList';
+import { Route, Routes } from 'react-router-dom';
+import Products from './pages/Products';
 
 const App = () => {
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="container mx-auto">
-        <h1 className="text-center text-3xl font-bold mb-8">Shop Our Products</h1>
-        <ProductList />
-      </div>
-    </div>
+    <Routes>
+      <Route path="/" element={<Products />} />
+    </Routes>
   );
 }
 
-export default App
+export default App;

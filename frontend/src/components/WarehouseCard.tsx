@@ -5,13 +5,16 @@ interface WarehouseCardProps {
     warehouse: Warehouse;
 }
 
-const WarehouseCard = ({warehouse} : WarehouseCardProps) => {
+const WarehouseCard = ({ warehouse }: WarehouseCardProps) => {
     const navigate = useNavigate();
 
     return (
         <div
-            className="bg-gray-100 p-4 rounded-lg shadow-md border border-gray-300 text-center"
+            className="bg-gray-100 p-4 rounded-lg shadow-md border border-gray-300 text-center text-gray-900 overflow-hidden transform transition-all hover:scale-105 hover:shadow-2xl duration-300 ease-in-out"
         >
+            <div className="w-full flex items-center justify-center">
+                <img src="/Warehouse.png" alt="Warehouse-placeholder" className="w-32 object-cover items-center" />
+            </div>
             <h3 className="text-blue-500 text-lg font-semibold">{warehouse.code}</h3>
             <p className="text-gray-600 text-sm mt-2">
                 <strong>Contact No:</strong> {warehouse.contactNo}
