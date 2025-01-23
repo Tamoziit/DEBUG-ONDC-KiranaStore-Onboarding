@@ -2,7 +2,7 @@
 
 ## Bandhan Kirana
 
-_Bandhan Kirana proposes to simplify anddecentralize the onboarding process for Kiranastores through a self-onboarding platform._
+_Bandhan Kirana proposes to simplify and decentralize the onboarding process for Kiranastores through a self-onboarding platform._
 
 # Application Walkthrough
 
